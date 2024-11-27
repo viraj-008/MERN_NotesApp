@@ -6,7 +6,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 const App:React.FC =()=> {
   return (
-    <div className="bg-gradient-to-r from-red-500 to-yellow-500 " >
+    <div className="bg-gradient-to-b from-slate-500 to-red-500 " >
        <div>
        <Router>
       <Routes>

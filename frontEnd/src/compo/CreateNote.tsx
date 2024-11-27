@@ -70,9 +70,9 @@ const handleSubmitAI = async (e: React.FormEvent) => {
 
   return (
     <>
-    <div className="  text-center font-bold text-white py-4 flex justify-between w-[90%] mx-auto"> <span className="font-serif opacity-55 ">My Awesome Notes</span> <button onClick={handleLogout } className="text-red-700  hover:text-red-500 shadow-lg px-4 rounded-md p-2">Logout</button></div>
+    <div className="  text-center font-bold text-white py-4 flex justify-between w-[90%] mx-auto"> <span className=" underline opacity-55 font-light ">My Awesome Notes</span> <button onClick={handleLogout } className="text-slate-600 font-semibold   hover:text-red-500  px-4 rounded-md p-2">Logout</button></div>
 
-    <div className=" w-[40%] mx-auto flex  flex-col  shadow-lg rounded-lg p-4 ">
+    <div className=" w-[40%] mx-auto flex  flex-col  bg-gradient-to-t shadow-lg from-slate-500 to-red-500 rounded-lg p-4 ">
 
     <form  onSubmit={handleSubmit} className="create-note">
        <div>
