@@ -75,7 +75,7 @@ const [noteState,setNoteState]=useState<NoteAPI[]>([])
 
             <div className="flex justify-between ">
             <button
-              className=" my-3 bg-white text-red-600  py-1 rounded-md font-bold shadow-md px-2 "
+              className=" my-3 bg-white text-red-600 py-1 rounded-md font-bold shadow-md px-2 "
               onClick={() => handleDelete(note._id)}
             >
               Delete
