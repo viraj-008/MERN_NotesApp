@@ -13,14 +13,30 @@ interface NoteAPI {
 
 const Notes: React.FC = () => {
 
-
  const [showColorPicker, setShowColorPicker] = useState<boolean>(false);
-  const [backgroundColor, setBackgroundColor] = useState<string>('bg-gradient-to-r from-red-500 to-yellow-500 ');
-
+ const [backgroundColor, setBackgroundColor] = useState<string>(' ');
 const [noteState,setNoteState]=useState<NoteAPI[]>([])
 
+
+const [token, setToken] = useState<string | null>("")
+
+useEffect(() => {
+  const Bertoken = localStorage.getItem("token")
+  if (!Bertoken) {
+    alert("You must be logged in to perform this action.");
+    return;
+  }
+  setToken(Bertoken)
+},[])
+
+
   useEffect(()=>{
-    axios.get("http://localhost:5000/api/notes/")
+    axios.get("http://localhost:5000/api/notes/",
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
     .then((response) => {
       const sortedNotes = response.data.sort((a: NoteAPI, b: NoteAPI) => {
         if (a._id > b._id) return -1; 
@@ -33,7 +49,7 @@ const [noteState,setNoteState]=useState<NoteAPI[]>([])
       console.error("Error fetching data from backend:", error);
     });
   
-  },[noteState])
+  },[token])
 
   const handleColorChange = (color: any) => {
     setBackgroundColor(color.hex);
@@ -68,14 +84,14 @@ const [noteState,setNoteState]=useState<NoteAPI[]>([])
         noteState.map((note) => (
           <div   style={{ backgroundColor }}
             key={note._id} 
-            className={` mx-auto w-[93%] shadow-lg py-4 p-2 rounded-md my-4  ${ backgroundColor }`}
+            className={` mx-auto border border-slate-700 w-[93%] shadow-lg py-4 p-2 rounded-md my-4  ${ backgroundColor }`}
           >
-            <h3 className="text-white font-semibold"><span className="font-extrabold text-black">Title: </span>{note.title}</h3>
-            <p className="text-white font-serif"><span className="font-extrabold extext-black">Containt: </span> {note.content}</p>
+            <h3 className="text-white font-semibold"><span className="font-extrabold text-black px-4">Title: </span>{note.title}</h3>
+            <p className="text-white font-serif my-2"><span className="font-extrabold text-black px-4">Containt: </span> {note.content}</p>
 
-            <div className="flex justify-between ">
+            <div className="flex justify-end ">
             <button
-              className=" my-3 bg-white text-red-600  py-1 rounded-md font-bold shadow-md px-2 "
+              className=" my-3 bg-white text-red-600 py-1 rounded-md font-bold shadow-md px-2 "
               onClick={() => handleDelete(note._id)}
             >
               Delete
