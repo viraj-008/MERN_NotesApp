@@ -13,14 +13,30 @@ interface NoteAPI {
 
 const Notes: React.FC = () => {
 
-
  const [showColorPicker, setShowColorPicker] = useState<boolean>(false);
-  const [backgroundColor, setBackgroundColor] = useState<string>(' ');
-
+ const [backgroundColor, setBackgroundColor] = useState<string>(' ');
 const [noteState,setNoteState]=useState<NoteAPI[]>([])
 
+
+const [token, setToken] = useState<string | null>("")
+
+useEffect(() => {
+  const Bertoken = localStorage.getItem("token")
+  if (!Bertoken) {
+    alert("You must be logged in to perform this action.");
+    return;
+  }
+  setToken(Bertoken)
+},[])
+
+
   useEffect(()=>{
-    axios.get("http://localhost:5000/api/notes/")
+    axios.get("http://localhost:5000/api/notes/",
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
     .then((response) => {
       const sortedNotes = response.data.sort((a: NoteAPI, b: NoteAPI) => {
         if (a._id > b._id) return -1; 

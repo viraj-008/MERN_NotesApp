@@ -1,63 +1,88 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const CreateNote: React.FC = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  
+
   const [question, setQuestion] = useState<string>('');
-const [response, setResponse] = useState<string>('');
-const [loading, setLoading] = useState<boolean>(false);
-const [error, setError] = useState<string>('');
+  const [response, setResponse] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>('');
+  const [token, setToken] = useState<string | null>("")
 
-const navigate = useNavigate();
 
-const handleSubmitAI = async (e: React.FormEvent) => {
-  e.preventDefault();
+  const navigate = useNavigate();
 
-  if (!question.trim()) {
-    setError('Please enter a question.');
-    return;
-  }
 
-  setLoading(true);
-  setError('');
-  setResponse('');
-
-  try {
-    const res = await axios.post('http://localhost:5000/api/notes/ask', { question });
-    console.log(res)
-    setResponse(res.data.answer);
-  } catch (err: unknown) {
-    if (axios.isAxiosError(err)) {
-      setError(err.response?.data?.error || 'An error occurred while fetching the response.');
-    } else {
-      setError('An unexpected error occurred.');
+  useEffect(() => {
+    const Bertoken = localStorage.getItem("token")
+    if (!Bertoken) {
+      alert("You must be logged in to perform this action.");
+      return;
     }
-  } finally {
-    setLoading(false);
-   
-  }
-};
+    setToken(Bertoken)
+  },[])
 
 
 
 
-
-  const handleSubmit = async(e: React.FormEvent) => {
+  const handleSubmitAI = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!question.trim()) {
+      setError('Please enter a question.');
+      return;
+    }
+
+    setLoading(true);
+    setError('');
+    setResponse('');
+
+    try {
+      const res = await axios.post('http://localhost:5000/api/notes/ask', { question });
+      console.log(res)
+      setResponse(res.data.answer);
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        setError(err.response?.data?.error || 'An error occurred while fetching the response.');
+      } else {
+        setError('An unexpected error occurred.');
+      }
+    } finally {
+      setLoading(false);
+
+    }
+  };
+
+
+
+
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
     try {
       const response = await axios.post("http://localhost:5000/api/notes", {
         title,
         content,
-      });
+      },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-
+      console.log(response, "ihihi")
       setTitle("");
       setContent("");
     } catch (error) {
       console.error("Error creating note:", error);
+
+
     }
   };
 
@@ -70,81 +95,87 @@ const handleSubmitAI = async (e: React.FormEvent) => {
 
   return (
     <>
-    <div className="  text-center font-bold text-white py-4 flex justify-between w-[90%] mx-auto"> <span className=" underline opacity-55 font-light ">My Awesome Notes</span> <button onClick={handleLogout } className="text-slate-600 font-semibold   hover:text-red-500  px-4 rounded-md p-2">Logout</button></div>
+      <div className="  text-center font-bold text-white py-4 flex justify-between w-[90%] mx-auto"> 
+        <span className=" underline opacity-55 font-light ">My Awesome Notes</span>
+        { token ?
+          <button onClick={handleLogout} className="text-slate-600 font-semibold   hover:text-red-500  px-4 rounded-md p-2">Logout</button>
+          : <Link to={"/"}>Login</Link>
+        }
+         </div>
 
-    <div className=" w-[40%] mx-auto flex  flex-col  bg-gradient-to-t shadow-lg from-slate-500 to-red-500 rounded-lg p-4 ">
+      <div className=" w-[40%] mx-auto flex  flex-col  bg-gradient-to-t shadow-lg from-slate-500 to-red-500 rounded-lg p-4 ">
 
-    <form  onSubmit={handleSubmit} className="create-note">
-       <div>
-      <input
-      className=" w-full bg-orange-200  outline-none py-4 px-2 rounded-md"
-        type="text"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-        placeholder="Title"
-        required
-      />
+        <form onSubmit={handleSubmit} className="create-note">
+          <div>
+            <input
+              className=" w-full bg-orange-200  outline-none py-4 px-2 rounded-md"
+              type="text"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="Title"
+              required
+            />
 
-      </div>
-
-      <div className="my-4">
-      <textarea
-      className=" w-full outline-none text-center bg-orange-200  py-4 rounded-md"
-        value={content}
-        onChange={(e) => setContent(e.target.value)}
-        placeholder="Content"
-        required
-      />
-
-      </div>
-
-      <div className="flex justify-center">
-
-      <button className="bg-gradient-to-r from-red-500 to-purple-500 text-white font-thin w-[30%]  py-1 rounded-lg" type="submit">Add Note</button>
-      </div>
-    </form>
-
-
-    </div>
-
-<div className="max-w-md mx-auto p-4 mt-8 ">
-      {/* <h1 className="text-xl font-bold text-center mb-4 underline">Ask AI a Question</h1> */}
-      <form onSubmit={handleSubmitAI } className="mb-4">
-        <textarea
-          value={question}
-          onChange={(e) => setQuestion(e.target.value)}
-          placeholder="Type your question'  AI is hare..."
-          className="w-full text-center bg-yellow-100 rounded mb-2 p-2 outline-none"
-          rows={2}
-        ></textarea>
-        <div className="flex justify-center">
-
-        <button
-          type="submit"
-          className="bg-gradient-to-r from-pink-600 to-white w-[30%] mx-auto rounded-lg font-bold text-white px-4 py-2  shadow-2xl  hover:bg-green-600"
-          disabled={loading}
-          >
-            {loading ? (
-    <div className="flex items-center space-x-2">
-      <div className="w-4 h-4 border-2 border-t-transparent border-white rounded-full animate-spin"></div>
-      <span>wait..</span>
-    </div>
-  ) : (
-    'ask'
-  )}
-        </button>
           </div>
-      </form>
-      {error && <p className="text-red-500 bg-gray-900 p-4 mb-2 font-bold rounded-md">erorr- : {error}</p>}
-       <div className="border w-[60%] mx-auto mt-5"></div>
-      {response && (
-        <div className="p-4  rounded bg-gray-400">
-          <h2 className="font-bold">AI Response:</h2>
-          <p>{response}</p>
-        </div>
-      )}
-    </div>
-  
+
+          <div className="my-4">
+            <textarea
+              className=" w-full outline-none text-center bg-orange-200  py-4 rounded-md"
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              placeholder="Content"
+              required
+            />
+
+          </div>
+
+          <div className="flex justify-center">
+
+            <button className="bg-gradient-to-r from-red-500 to-purple-500 text-white font-thin w-[30%]  py-1 rounded-lg" type="submit">Add Note</button>
+          </div>
+        </form>
+
+
+      </div>
+
+      <div className="max-w-md mx-auto p-4 mt-8 ">
+        {/* <h1 className="text-xl font-bold text-center mb-4 underline">Ask AI a Question</h1> */}
+        <form onSubmit={handleSubmitAI} className="mb-4">
+          <textarea
+            value={question}
+            onChange={(e) => setQuestion(e.target.value)}
+            placeholder="Type your question'  AI is hare..."
+            className="w-full text-center bg-yellow-100 rounded mb-2 p-2 outline-none"
+            rows={2}
+          ></textarea>
+          <div className="flex justify-center">
+
+            <button
+              type="submit"
+              className="bg-gradient-to-r from-pink-600 to-white w-[30%] mx-auto rounded-lg font-bold text-white px-4 py-2  shadow-2xl  hover:bg-green-600"
+              disabled={loading}
+            >
+              {loading ? (
+                <div className="flex items-center space-x-2">
+                  <div className="w-4 h-4 border-2 border-t-transparent border-white rounded-full animate-spin"></div>
+                  <span>wait..</span>
+                </div>
+              ) : (
+                'ask'
+              )}
+            </button>
+          </div>
+        </form>
+        {error && <p className="text-red-500 bg-gray-900 p-4 mb-2 font-bold rounded-md">erorr- : {error}</p>}
+        <div className="border w-[60%] mx-auto mt-5"></div>
+        {response && (
+          <div className="p-4  rounded bg-gray-400">
+            <h2 className="font-bold">AI Response:</h2>
+            <p>{response}</p>
+          </div>
+        )}
+      </div>
+
     </>
   );
 };
