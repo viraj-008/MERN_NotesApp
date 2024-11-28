@@ -29,10 +29,10 @@ router.post("/register", async (req:any, res:any) => {
     try {
       const user = await User.findOne({ email });
       if (!user) return res.status(404).json({ message: "User not found" });
-  
+      
       const isMatch = await comparePassword(password, user.password);
       if (!isMatch) return res.status(400).json({ message: "Invalid credentials" });
-  
+      
       const token = generateToken(user.id);
       res.json({ token ,user});
     } catch (error) {

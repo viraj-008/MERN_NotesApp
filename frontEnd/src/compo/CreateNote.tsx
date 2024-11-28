@@ -79,7 +79,8 @@ const CreateNote: React.FC = () => {
       console.log(response, "ihihi")
       setTitle("");
       setContent("");
-    } catch (error) {
+    } catch (error:any) {
+      alert(error.message)
       console.error("Error creating note:", error);
 
 

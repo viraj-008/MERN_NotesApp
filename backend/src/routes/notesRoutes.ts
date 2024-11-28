@@ -51,7 +51,7 @@ router.post("/", authenticate, async(req, res) => {
 });
 
 // Get all notes
-router.get("/" ,async (req, res) => {
+router.get("/" , authenticate,async (req, res) => {
   try {
     const notes = await Note.find();
     res.json(notes);
