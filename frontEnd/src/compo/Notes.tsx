@@ -49,7 +49,7 @@ useEffect(() => {
       console.error("Error fetching data from backend:", error);
     });
   
-  },[noteState])
+  },[token])
 
   const handleColorChange = (color: any) => {
     setBackgroundColor(color.hex);

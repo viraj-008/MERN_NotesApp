@@ -51,9 +51,10 @@ router.post("/", authenticate, async(req, res) => {
 });
 
 // Get all notes
-router.get("/" , authenticate,async (req, res) => {
+router.get("/" ,authenticate ,async (req, res) => {
   try {
-    const notes = await Note.find();
+    const notes = await Note.find({author:req.user});
+    console.log(notes)
     res.json(notes);
   } catch (error) {
     res.status(500).json({ error: "Error fetching notes" });
