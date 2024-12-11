@@ -55,9 +55,9 @@ const Register: React.FC = () => {
   });
 
   return (
-    <div className="flex bg-gradient-to-t from-yellow-600">
-      <div className="w-[50%]">
-        <div className="h-screen hidden lg:block">
+    <div className="flex flex-col lg:flex-row bg-gradient-to-t from-yellow-600 min-h-screen">
+      <div className="w-full lg:w-[50%]">
+        <div className="h-64 lg:h-screen hidden lg:block">
           <img
             src="https://img.freepik.com/fotos-premium/imagen-fondo_910766-187.jpg?w=826"
             alt="Background"
@@ -66,11 +66,11 @@ const Register: React.FC = () => {
         </div>
       </div>
 
-      <div className="w-[40%] flex justify-center items-center">
-        <div className="w-[70%] mx-auto mr-4">
-          <h2 className="text-xl font-bold mb-4 text-center opacity-65">Register</h2>
+      <div className="w-full  lg:w-[50%] flex justify-center items-center px-4">
+        <div className="w-full max-w-md mx-auto">
+          <h2 className="text-2xl font-bold mb-4 text-center opacity-80">Register</h2>
           {formik.errors.general && (
-            <p className="text-red-500 mb-4 font-bold underline">{formik.errors.general}</p>
+            <p className="text-red-500 mb-4 font-bold underline text-center">{formik.errors.general}</p>
           )}
           <form onSubmit={formik.handleSubmit}>
             <div className="mb-4">
@@ -89,7 +89,7 @@ const Register: React.FC = () => {
                 value={formik.values.username}
               />
               {formik.touched.username && formik.errors.username && (
-                <p className="text-red-700 font-bold text-sm">{formik.errors.username}</p>
+                <p className="text-red-700 font-bold text-sm mt-1">{formik.errors.username}</p>
               )}
             </div>
             <div className="mb-4">
@@ -108,7 +108,7 @@ const Register: React.FC = () => {
                 value={formik.values.email}
               />
               {formik.touched.email && formik.errors.email && (
-                <p className="text-red-700 font-bold text-sm">{formik.errors.email}</p>
+                <p className="text-red-700 font-bold text-sm mt-1">{formik.errors.email}</p>
               )}
             </div>
             <div className="mb-4">
@@ -127,7 +127,7 @@ const Register: React.FC = () => {
                 value={formik.values.password}
               />
               {formik.touched.password && formik.errors.password && (
-                <p className="text-red-700 font-bold text-sm">{formik.errors.password}</p>
+                <p className="text-red-700 font-bold text-sm mt-1">{formik.errors.password}</p>
               )}
             </div>
             <button
@@ -138,7 +138,7 @@ const Register: React.FC = () => {
               REGISTER
             </button>
             <Link to={"/"}>
-              <h1 className="underline text-white font-thin p-2">Login..</h1>
+              <h1 className="underline text-white font-thin p-2 text-center">Login..</h1>
             </Link>
           </form>
         </div>

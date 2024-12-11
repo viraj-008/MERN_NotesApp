@@ -72,10 +72,9 @@ useEffect(() => {
       <CreateNote/>
       <div className="  mt-6 py-4  ">
       <div className="flex justify-end w-[90%]  mx-auto">
-        <button className=" my-3 text-red-600 bg-white  py-2 rounded-md font-bold  px-2"
+      { noteState.length >0 ?  <button className=" my-3 text-red-800 font-serif shadow-2xl  py-2 rounded-md font-bold  px-2"
          onClick={() => setShowColorPicker(!showColorPicker)}>
-         Change color 
-        </button>
+         Change your notes color         </button>:""}
         {showColorPicker && (
           <ChromePicker color={backgroundColor} onChange={handleColorChange} />
         )}
@@ -91,7 +90,7 @@ useEffect(() => {
 
             <div className="flex justify-end ">
             <button
-              className=" my-3 bg-white text-red-600 py-1 rounded-md font-bold shadow-md px-2 "
+              className=" my-3 bg-red-800 text-white py-1 rounded-md font-bold shadow-md px-2 "
               onClick={() => handleDelete(note._id)}
             >
               Delete
@@ -102,7 +101,7 @@ useEffect(() => {
           </div>
         ))
       ) : (
-        <p className="text-center mx-auto font-serif font-bold my-8">
+        <p className="text-center mx-auto font-serif font-bold my-8  opacity-45">
           No notes yet!
         </p>
       )}
